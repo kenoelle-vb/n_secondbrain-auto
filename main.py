@@ -925,8 +925,8 @@ if st.session_state.login == 0:
                                 st.success("Login successful!")
                                 st.session_state.login = 1
                                 st.session_state.email = login_email
-                                #time.sleep(5)
-                                #st.rerun()
+                                time.sleep(5)
+                                st.rerun()
                             else:
                                 st.error(f"Email '{login_email}' not registered.")
                         else:
