@@ -826,8 +826,9 @@ def trigger_download(file_data: BytesIO, filename: str, mime_type: str):
         if (anchor) {{
             anchor.click();
         }}
-    """
+        """
     html(f"<script>{js}</script>")
+    """
 
 def run_iterative_refinement_for_automation(initial_prompt, internet_knowledge, iterations=5, global_context="", model=None):
     knowledge_len = len(internet_knowledge)
