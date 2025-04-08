@@ -1114,27 +1114,34 @@ elif st.session_state.login == 1:
 
                                     # Save individual task results
                                     excel_data = save_results_to_excel_in_memory(parts, refined)
-                                    zipf.writestr(f"task_row_{original_row_index+1}_refined_output.xlsx", excel_data)
+                                    task_title = selected_df.loc[selected_df.index[i], "Task Title"]
+                                    sanitized_title = "".join(c if c.isalnum() else "_" for c in task_title)
+                                    zipf.writestr(f"{sanitized_title}_refined_output.xlsx", excel_data)
 
-                                    docx_files = save_results_to_docx_in_memory(parts, refined, base_filename=f"task_row_{original_row_index+1}_results")
+                                    task_title = selected_df.loc[selected_df.index[i], "Task Title"]
+                                    sanitized_title = "".join(c if c.isalnum() else "_" for c in task_title)
+                                    docx_files = save_results_to_docx_in_memory(parts, refined, base_filename=f"{sanitized_title}_results")
                                     for name, data in docx_files.items():
-                                        zipf.writestr(f"task_row_{original_row_index+1}_{name}", data)
+                                        zipf.writestr(f"{sanitized_title}_{name}", data)
 
-                                    txt_files = save_results_to_txt_in_memory(parts, refined, base_filename=f"task_row_{original_row_index+1}_results")
+                                    task_title = selected_df.loc[selected_df.index[i], "Task Title"]
+                                    sanitized_title = "".join(c if c.isalnum() else "_" for c in task_title)
+                                    txt_files = save_results_to_txt_in_memory(parts, refined, base_filename=f"{sanitized_title}_results")
                                     for name, data in txt_files.items():
-                                        zipf.writestr(f"task_row_{original_row_index+1}_{name}", data)
+                                        zipf.writestr(f"{sanitized_title}_{name}", data)
 
                                 # Save internet search results if any
                                 if all_internet_search_dfs:
                                     for i, search_dfs in enumerate(all_internet_search_dfs):
-                                        original_row_index = selected_df.index[i] # Get index from selected_df
+                                        task_title = selected_df.loc[selected_df.index[i], "Task Title"]
+                                        sanitized_title = "".join(c if c.isalnum() else "_" for c in task_title)
                                         for filename, df in search_dfs.items():
                                             excel_search_buffer = BytesIO()
                                             with pd.ExcelWriter(excel_search_buffer, engine="openpyxl") as writer:
                                                 df.to_excel(writer, index=False)
                                             excel_search_buffer.seek(0)
                                             try:
-                                                zipf.writestr(f"task_row_{original_row_index+1}_{filename}.xlsx", excel_search_buffer.getvalue())
+                                                zipf.writestr(f"{sanitized_title}_{filename}.xlsx", excel_search_buffer.getvalue())
                                             except Exception as e:
                                                 st.error(f"Error writing internet search results to zip: {e}")
 
