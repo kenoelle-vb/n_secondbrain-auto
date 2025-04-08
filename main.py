@@ -811,24 +811,7 @@ def process_dataframe(df: pd.DataFrame):
                 zipf.writestr(filename, filedata)
         zip_buffer.seek(0)
 
-        # Trigger immediate download
-        trigger_download(zip_buffer, f"task{index + 1}_outputs.zip", "application/zip")
-        st.success(f"Task {index + 1} processed and download initiated.")
         time.sleep(2) # Small delay between tasks
-
-def trigger_download(file_data: BytesIO, filename: str, mime_type: str):
-    b64 = base64.b64encode(file_data.getvalue()).decode()
-    href = f'<a href="data:{mime_type};base64,{b64}" download="{filename}"></a>'
-    html(href)
-    # JavaScript to immediately click the link
-    js = f"""
-        const anchor = document.querySelector('a[download="{filename}"]');
-        if (anchor) {{
-            anchor.click();
-        }}
-        """
-    html(f"<script>{js}</script>")
-    """
 
 def run_iterative_refinement_for_automation(initial_prompt, internet_knowledge, iterations=5, global_context="", model=None):
     knowledge_len = len(internet_knowledge)
