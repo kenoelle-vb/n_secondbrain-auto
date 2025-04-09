@@ -998,7 +998,7 @@ elif st.session_state.login == 1:
                                 toc_parts_str = row["TOC Parts"]
                                 iterations = int(row["Iterations"]) if isinstance(row["Iterations"], str) else int(row["Iterations"])
                                 num_toc_parts = len(extract_parts(toc_parts_str)) # Use your function to get the count
-                                estimated_time_per_task_minutes = num_toc_parts * iterations * 1.5
+                                estimated_time_per_task_minutes = num_toc_parts * iterations * 0.8
                                 estimated_total_time_seconds += estimated_time_per_task_minutes * 60
                             except Exception as e:
                                 st.warning(f"Could not estimate time for row {row.name}: {e}. Skipping time estimation for this row.")
