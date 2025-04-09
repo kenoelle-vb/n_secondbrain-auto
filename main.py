@@ -510,7 +510,7 @@ def iterative_refinement(initial_prompt, internet_knowledge, iterations=5, globa
     end_index = min(start_index + chunk_size, knowledge_len)
     truncated_knowledge = internet_knowledge[start_index:end_index]
     context_input = st.session_state.get("context_input", "")  # Default to empty string
-    combined_prompt = f"{global_context}\n\n{truncated_knowledge}\n\n{initial_prompt}" if global_context or truncated_knowledge else initial_prompt
+    combined_prompt = f"{truncated_knowledge}\n\n{initial_prompt}" if truncated_knowledge else initial_prompt
     initial_response = llm_generate(combined_prompt, model=model, context=context_input)
     all_responses.append(initial_response)
 
@@ -528,7 +528,6 @@ def iterative_refinement(initial_prompt, internet_knowledge, iterations=5, globa
 
             feedback_prompt = (
                 # type_input, language_input, prompt_input, context_input
-                f"Overall Context: {global_context}\n\n"
                 f"Internet Knowledge (truncated): {truncated_knowledge}\n\n"
                 f"Based on this output: '{current_response}', identify any weaknesses, missing information, improvements that can be done, ANYTHING THAT CAN MAKE IT BETTER."
                 f"Provide feedback in 4-5 small bullet points, make sure the points are short-mid sentences."
@@ -540,7 +539,6 @@ def iterative_refinement(initial_prompt, internet_knowledge, iterations=5, globa
             type_input = st.session_state.get("type_input", "Essay")  # Default to Essay
             revision_prompt = (
                 # type_input, language_input, prompt_input, context_input
-                f"Overall Context: {global_context}\n\n"
                 f"Internet Knowledge (truncated): {truncated_knowledge}\n\n"
                 f"Taking into account the following feedback: '{feedback}', revise and improve this output: "
                 f"'{current_response}' based on the initial prompt: '{initial_prompt}'.\n"
@@ -822,7 +820,7 @@ def run_iterative_refinement_for_automation(initial_prompt, internet_knowledge, 
     start_index = 0
     end_index = min(start_index + chunk_size, knowledge_len)
     truncated_knowledge = internet_knowledge[start_index:end_index]
-    combined_prompt = f"{global_context}\n\n{truncated_knowledge}\n\n{initial_prompt}" if global_context or truncated_knowledge else initial_prompt
+    combined_prompt = f"{truncated_knowledge}\n\n{initial_prompt}" if truncated_knowledge else initial_prompt
     initial_response = llm_generate(combined_prompt, model=model, context=st.session_state.get("context_input"))
     all_responses.append(initial_response)
 
@@ -839,7 +837,6 @@ def run_iterative_refinement_for_automation(initial_prompt, internet_knowledge, 
             truncated_knowledge = internet_knowledge[start_index:end_index]
 
             feedback_prompt = (
-                f"Overall Context: {global_context}\n\n"
                 f"Internet Knowledge (truncated): {truncated_knowledge}\n\n"
                 f"Based on this output: '{current_response}', identify any weaknesses, missing information, improvements that can be done, ANYTHING THAT CAN MAKE IT BETTER."
                 f"Provide feedback in 7-9 bullet points, make sure the points are mid-long detailed sentences."
@@ -849,7 +846,6 @@ def run_iterative_refinement_for_automation(initial_prompt, internet_knowledge, 
             thinking_logs.append(feedback)
 
             revision_prompt = (
-                f"Overall Context: {global_context}\n\n"
                 f"Internet Knowledge (truncated): {truncated_knowledge}\n\n"
                 f"Make sure to bring up sentences, statistics, statements, or ANYTHING RELEVANT as CONCRETE SUPPORTING EVIDENCE (Bring it up inside the Content and NOT OUTSIDE)."
                 f"Taking into account the following feedback: '{feedback}', revise and improve this output: "
